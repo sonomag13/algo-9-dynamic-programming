@@ -12,7 +12,7 @@ int main() {
     size_t sizeSquare = 4;
     pair<size_t, size_t> squarePosition{make_pair(3, 2)};
 
-    vector<vector<uint8_t>> matrix = getMatrix<uint8_t>(sizeMatrix, sizeSquare, squarePosition);
+    vector<vector<int>> matrix = getMatrix<int>(sizeMatrix, sizeSquare, squarePosition);
 
     // printMatrix<uint8_t>(matrix);
 
@@ -24,6 +24,11 @@ int main() {
         }
         cout << endl;
     }
+
+    Solution solution;
+    size_t maxArea = solution.maxSquare(matrix);
+
+    cout << "max area = " << maxArea << endl;
 
     return EXIT_SUCCESS;
 }

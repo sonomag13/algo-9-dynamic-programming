@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <algorithm>
 
 using namespace std;
 
@@ -59,3 +60,58 @@ void printMatrix2(vector<vector<uint8_t>> matrix) {
         cout << endl;
     }
 }
+
+class Solution {
+public:
+    /**
+     * @param matrix: a matrix of 0 and 1
+     * @return: an integer
+     */
+    int maxSquare(vector<vector<int>> &matrix) {
+        // write your code here
+
+        // handle the empty case
+        size_t rowNum = matrix.size();
+        if (!rowNum) {
+            return 0;
+        }
+        size_t colNum = matrix[0].size();
+        if (!colNum) {
+            return 0;
+        }
+
+        // define the dp space and apply boundary condition
+        vector<vector<int>> dp(rowNum, vector<int>(colNum, -1));
+        for (size_t rowIdx = 0; rowIdx < rowNum; ++rowIdx) {
+            dp[rowIdx][0] = matrix[rowIdx][0];      // left column
+        }
+        dp[0] = matrix[0];                          // top row
+
+        /**
+         * start dp
+         * transition function:
+         * dp[i][j] = min(dp[i-1][j-1], dp[i-1][j], dp[i][j1]) + 1
+         */
+        for (size_t rowIdx = 1; rowIdx < rowNum; rowIdx++) {
+            for (size_t colIdx = 1; colIdx < colNum; colIdx++) {
+                if (matrix[rowIdx][colIdx]) {
+                    vector<int> squareSize{dp[rowIdx - 1][colIdx - 1], dp[rowIdx - 1][colIdx], dp[rowIdx][colIdx - 1]};
+                    dp[rowIdx][colIdx] = *min_element(squareSize.begin(), squareSize.end()) + 1;
+                }
+                else {
+                    dp[rowIdx][colIdx] = 0;
+                }
+            }
+        }
+
+        // search for the maximum square
+        int maxSquare = 0;
+        for (auto row : dp) {
+            int maxSquareRow = *max_element(row.begin(), row.end());
+            if (maxSquare < maxSquareRow) {
+                maxSquare = maxSquareRow;
+            }
+        }
+        return maxSquare * maxSquare;
+    }
+};
