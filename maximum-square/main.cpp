@@ -14,10 +14,6 @@ int main() {
 
     vector<vector<int>> matrix = getMatrix<int>(sizeMatrix, sizeSquare, squarePosition);
 
-    // printMatrix<uint8_t>(matrix);
-
-    // printMatrix2(matrix);
-
     for (auto row : matrix) {
         for (auto val : row) {
             cout << " " << (int) val << " ";
