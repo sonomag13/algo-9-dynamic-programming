@@ -36,46 +36,44 @@ using namespace std;
 
 class Solution {
 public:
-    /**
-     * @param m: positive integer (1 <= m <= 100)
-     * @param n: positive integer (1 <= n <= 100)
-     * @return: An integer
-     */
-    int uniquePaths(int m, int n) {        
+    int uniquePaths(int m, int n) {
         
         /**
-         * allocate a 2D matrix with m row and n column for dp searching. 
-         * transfer function:
-         *      dp[i][j] = dp[i-1][j] + dp[i][j-1]; 
-         **/         
-        vector<vector<int>> dp(m, vector<int>(n));
+         * the element at [i, j] in this matrix represents the count of 
+         * the paths to get to that coordinate 
+         **/ 
+        vector<vector<int>> pathCount(m, vector<int>(n, 0)); 
         
-        // initialize dp at [0][0]
-        dp[0][0] = 1;
-        
-        // apply the boundary condition of the top row
-        for (size_t j = 1; j < n; ++j) {
-            dp[0][j] = 1; 
+        /**
+         * boundary condition
+         * - the elements on the top row should be 1 since the robot can 
+         *   only enter these coordinates from its left neighbor
+         * - the elements on the left column should be 1 since the robot
+         *   can only enter these coordinate from its top neighbor
+         **/ 
+        for (int colIdx = 0; colIdx < n; ++colIdx) {
+            pathCount[0][colIdx] = 1; 
         }
-        
-        // apply the boundary condidion of the left column
-        for (size_t i = 1; i < m; ++i) {
-            dp[i][0] = 1; 
+        for (int rowIdx = 0; rowIdx < m; ++rowIdx) {
+            pathCount[rowIdx][0] = 1; 
         }
         
         /**
-         * start dp process from [1][1] to [m-1][n-1]
-         * Order: 
-         * - from left to right
-         * - from top to bottom
-         */ 
-        for (size_t i = 1; i < m; ++i) {
-            for (size_t j = 1; j < n; ++j) {
-                dp[i][j] = dp[i-1][j] + dp[i][j-1]; 
+         * Ultimate goal: the unique path to get to [m - 1][n - 1], which depends
+         * on how many unique ways to get to its neighbors on the top and left
+         *             
+         * Subtaks: for an arbitary with coordinate [i][j], the unique path to 
+         * get there is the sum of unique paths to get to its top and left neighbors, 
+         * i.e.
+         *              paths[i][j] = paths[i - 1][j] + paths[i][j - 1]
+         **/ 
+        
+        for (int rowIdx = 1; rowIdx < m; ++rowIdx) {
+            for (int colIdx = 1; colIdx < n; ++colIdx) {
+                pathCount[rowIdx][colIdx] = pathCount[rowIdx - 1][colIdx] + pathCount[rowIdx][colIdx - 1]; 
             }
         }
         
-        return dp[m-1][n-1]; 
-        
+        return pathCount[m - 1][n - 1]; 
     }
 };
